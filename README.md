@@ -14,3 +14,5 @@ Danny seeks to utilize the data to address several inquiries concerning his cust
 He intends to employ these insights in determining the viability of expanding the current customer loyalty program. Furthermore, he requires assistance in generating basic datasets that his team can conveniently examine without relying on SQL.
 
 ## Entity Relationship Diagram
+
+![]()
