@@ -328,7 +328,7 @@ __Output:__
 
 #### Steps:
 
-In summary, the query combines data from the Sales and Menu tables. It calculates the total amount spent and the total number of items purchased for each customer and product combination. Additionally, it calculates the points for each combination based on a conditional statement. The outer query then groups the result set by customer ID and calculates the sum of points for each customer. The result set includes the customer ID and the total sum of points for each customer.
+The query combines data from the Sales and Menu tables. It calculates the total amount spent and the total number of items purchased for each customer and product combination. Additionally, it calculates the points for each combination based on a conditional statement. The outer query then groups the result set by customer ID and calculates the sum of points for each customer. The result set includes the customer ID and the total sum of points for each customer.
 
 - The outer query starts with "SELECT Customer_id, SUM(Points) Points from (", indicating that a subquery is being used as the source of the data for the outer query. The columns selected in the outer query include Customer_id and the sum of Points.
 
@@ -339,8 +339,6 @@ In summary, the query combines data from the Sales and Menu tables. It calculate
 - "GROUP BY Sales.Customer_id, Product_name" groups the result set by the customer ID and product name. It means that the subsequent calculations and conditional statements will be performed for each unique combination of customer ID and product name. The closing parentheses ")" denotes the end of the subquery and the start of the outer query.
 
 - "GROUP BY Customer_id" in the outer query groups the result set by customer ID. It combines the data for each customer and prepares for the sum calculation.
-
-In summary, this query combines data from the Sales and Menu tables. It calculates the total amount spent and the total number of items purchased for each customer and product combination. Additionally, it calculates the points for each combination based on a conditional statement. The outer query then groups the result set by customer ID and calculates the sum of points for each customer. The result set includes the customer ID and the total sum of points for each customer.
 
 ---
 
