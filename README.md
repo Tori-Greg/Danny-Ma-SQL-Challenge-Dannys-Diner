@@ -25,4 +25,4 @@ He intends to employ these insights in determining the viability of expanding th
 
 ![](ERD.JPG)
 
-**_The Entity Relationship diaagram shows the relationships and connections between all tables in the database._**
+**_The Entity Relationship diagram shows the relationships and connections between all tables in the database._**
