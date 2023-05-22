@@ -20,8 +20,6 @@ __Output__
 | B           | 74                 |
 | C           | 36                 |
 
----
-
 #### Steps
 
 This query retrieves data from the "Sales" and "Menu" tables and calculates the total amount spent by each customer. Here's an explanation of each part of the query:
@@ -35,4 +33,44 @@ This query retrieves data from the "Sales" and "Menu" tables and calculates the 
 - GROUP BY Customer_id: This clause groups the result set by the "Customer_id" column. It means that the calculation of the total amount spent will be performed for each unique customer.
 
 **_As seen in the output the query calculates the total amoount spent by each customer_**
+
+---
+
+**2.** How many days has each customer visited the restaurant?
+
+__Query__
+
+    Select Customer_id, count(distinct Order_date) as No_of_Days_Visited
+    from Sales
+    Group by Customer_id;
+    
+__Output__
+
+| Customer_id | No_of_Days_Visited |
+| ----------- | ------------------ |
+| A           | 4                  |
+| B           | 6                  |
+| C           | 2                  |
+
+#### Steps
+
+The query retrieves data from the "Sales" table and calculates the number of distinct days visited by each customer. It groups the result set by the "Customer_id" column and includes the customer ID and the corresponding count of distinct order dates as "No_of_Days_Visited" for each customer.
+
+
+- SELECT Customer_id, count(distinct Order_date) as No_of_Days_Visited: This part of the query selects two columns. First, it selects the "Customer_id" column from the Sales table, which represents the unique identifier for each customer. Second, it calculates the count of distinct "Order_date" values for each customer. The alias "No_of_Days_Visited" is given to the calculated count.
+
+- FROM Sales: This clause specifies the table from which data will be retrieved, which in this case is the "Sales" table.
+
+- GROUP BY Customer_id: This clause groups the result set by the "Customer_id" column. It means that the count of distinct order dates will be calculated for each unique customer.
+
+
+
+
+
+
+
+
+
+
+
 
