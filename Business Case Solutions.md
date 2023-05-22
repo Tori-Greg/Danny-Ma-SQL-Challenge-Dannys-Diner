@@ -1,8 +1,10 @@
-# Business Case Solutions
+# SQL Challenge Week 1 - Dannys Diner
+
+## Business Case Solutions
 This section provides Sql queries, steps and analysis in solving the business case questions provided by Danny.
 
 ## Questions and Solutions
-**1.** What is the total amount each customer spent at the restaurant?
+**1.** **What is the total amount each customer spent at the restaurant?**
 
 __Query:__
 
@@ -36,7 +38,7 @@ This query retrieves data from the "Sales" and "Menu" tables and calculates the 
 
 ---
 
-**2.** How many days has each customer visited the restaurant?
+**2.** **How many days has each customer visited the restaurant?**
 
 __Query:__
 
@@ -64,7 +66,7 @@ The query retrieves data from the "Sales" table and calculates the number of dis
 
 ---
 
-**3.** What was the first item from the menu purchased by each customer?
+**3.** **What was the first item from the menu purchased by each customer?**
 
 __Query:__
 
@@ -99,7 +101,7 @@ This query combines data from the "Sales" and "Menu" tables based on the matchin
 
 ---
 
-**4.** What is the most purchased item on the menu and how many times was it purchased by all customers?
+**4.** **What is the most purchased item on the menu and how many times was it purchased by all customers?**
 
 __Query:__
 
@@ -135,6 +137,105 @@ In summary, the query combines data from the "Sales" and "Menu" tables based on 
 
 
 ---
+
+**5.** **Which item was the most popular for each customer?**
+
+__Query:__
+
+    Select Customer_id, Product_name, Popularity
+    from(
+    	Select Customer_id, Product_name, count(product_name) as Popularity,
+    	Dense_rank() OVER (Partition by Customer_id Order by count(product_name) desc) as Rnk
+    	from Sales
+    	join Menu
+    	on Sales.Product_id = Menu.Product_id
+    	Group by Customer_id, product_name
+    ) X
+    Where X.Rnk = 1;
+    
+__Output:__
+
+| Customer_id | Product_name | Popularity |
+| ----------- | ------------ | ---------- |
+| A           | ramen        | 3          |
+| B           | curry        | 2          |
+| B           | sushi        | 2          |
+| B           | ramen        | 2          |
+| C           | ramen        | 3          |
+
+#### Steps:
+
+The query combines data from the Sales and Menu tables based on the matching product IDs. It calculates the popularity (count) of each product for each customer, assigns ranks to the combinations of customer ID and product name, and selects only the records with the highest rank (i.e., the product with the highest count) for each customer. The result set includes the customer ID, product name, and popularity.
+
+- The inner query starts with "Select Customer_id, Product_name, count(product_name) as Popularity." It retrieves the customer ID, product name, and counts the occurrences of each product name in the sales data. The alias "Popularity" is given to the calculated count.
+
+- "Dense_rank() OVER (Partition by Customer_id Order by count(product_name) desc) as Rnk" is a window function used within the inner query. It assigns a rank to each combination of customer ID and product name based on the count of occurrences in descending order. The highest count will have a rank of 1.
+
+- The inner query continues with "from Sales join Menu on Sales.Product_id = Menu.Product_id." It performs an inner join between the Sales and Menu tables based on the matching product IDs.
+
+- The inner query also includes "Group by Customer_id, product_name." It groups the result set by customer ID and product name, allowing the count to be calculated for each unique combination.
+
+- The inner query is then aliased as "X" to make it a subquery, and the outer query begins with "Select Customer_id, Product_name, Popularity from X." It selects the customer ID, product name, and popularity (count) columns from the subquery.
+
+- "Where X.Rnk = 1" filters the result set by the rank column "Rnk" from the subquery. It only includes the records where the rank is equal to 1, meaning it selects the product with the highest count of occurrences for each customer.
+
+---
+
+**6.** **Which item was purchased first by the customer after they became a member?**
+
+__Query:__
+
+    Select * from
+    	(
+    	Select Sales.Customer_id, Order_date, product_name, Join_date, 
+    	DENSE_RANK() Over(Partition by Sales.customer_id  order by Order_date Asc) Rnk
+    	from Sales
+    	join Menu
+    	on Sales.Product_id = Menu.Product_id 
+    	join Members
+    	on Sales.Customer_id = Members.Customer_id
+    	where Order_date >= Join_date
+    	)Entire
+    Where Entire.Rnk = 1;
+    
+__Output:__
+
+| Customer_id | Order_date | product_name | Join_date  | Rnk |
+| ----------- | ---------- | ------------ | ---------- | --- |
+| A           | 2021-01-07 | curry        | 2021-01-07 | 1   |
+| B           | 2021-01-11 | sushi        | 2021-01-09 | 1   |
+
+**_The outcome indicates that only Customer A and Customer B are identified as members, while Customer C is not yet registered as a member._**
+
+#### Steps:
+
+The query combines data from the Sales, Menu, and Members tables. It retrieves the customer ID, order date, product name, and join date for each record where the order date is greater than or equal to the join date. The query assigns a dense rank to each combination of customer ID and order date, and then selects only the records with a rank of 1 (i.e., the earliest order) for each customer. The result set includes all columns from the selected records.
+
+- The outer query starts with "Select * from (", which indicates that a subquery is being used as the source of the data for the outer query.
+
+- The inner query begins with "Select Sales.Customer_id, Order_date, product_name, Join_date, DENSE_RANK() Over(Partition by Sales.customer_id order by Order_date Asc) Rnk." It selects several columns, including the customer ID, order date, product name, join date, and a calculated column called "Rnk" that assigns a dense rank to each combination of customer ID and order date. The dense rank is determined by ordering the rows within each customer ID group in ascending order of order date.
+
+- The inner query continues with "from Sales join Menu on Sales.Product_id = Menu.Product_id join Members on Sales.Customer_id = Members.Customer_id." It performs three joins: Sales and Menu based on matching product IDs, and Sales and Members based on matching customer IDs. This allows the query to retrieve data from these three tables.
+
+- "where Order_date >= Join_date" is the filtering condition in the inner query. It specifies that only records where the order date is greater than or equal to the join date should be included. The closing parentheses ")" denotes the end of the subquery and the start of the outer query.
+
+- "Where Entire.Rnk = 1" is the final filtering condition in the outer query. It selects only the records from the subquery where the rank ("Rnk") is equal to 1, meaning it retains only the earliest order for each customer.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
 
 
 
