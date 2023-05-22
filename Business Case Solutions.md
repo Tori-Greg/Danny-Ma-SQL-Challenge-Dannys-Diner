@@ -261,6 +261,8 @@ The query combines data from the Sales, Menu, and Members tables. It retrieves t
 
 - "Where Entire.Rnk = 1" is the final filtering condition in the outer query. It selects only the records from the subquery where the rank ("Rnk") is equal to 1, meaning it retains only the earliest order for each customer.
 
+---
+
 **8.** **What is the total items and amount spent for each member before they became a member?**
 
 __Query__
@@ -296,56 +298,91 @@ In summary, this query combines data from the Sales, Menu, and Members tables. I
 
 - ORDER BY 1: This clause orders the result set by the first column, which is "Sales.Customer_id", in ascending order.
 
+---
 
+**9.** **If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
 
+__Query:__
 
+    Select Customer_id, sum(Points)Points from 
+    (
+    Select Sales.Customer_id, Product_name, Sum(Price) Total_amount, count(product_name) Total_Items,
+    CASE
+    	When Product_name = 'Sushi' Then Sum(price) * 20
+    	Else sum(price) * 10
+    End as Points
+    from Sales
+    join Menu
+    on Sales.Product_id = Menu.Product_id 
+    Group by Sales.Customer_id, Product_name
+    ) Multiplier
+    Group by Customer_id;
 
+__Output:__
 
+| Customer_id | Points |
+| ----------- | ------ |
+| A           | 860    |
+| B           | 940    |
+| C           | 360    |
 
+#### Steps:
 
+In summary, the query combines data from the Sales and Menu tables. It calculates the total amount spent and the total number of items purchased for each customer and product combination. Additionally, it calculates the points for each combination based on a conditional statement. The outer query then groups the result set by customer ID and calculates the sum of points for each customer. The result set includes the customer ID and the total sum of points for each customer.
 
+- The outer query starts with "SELECT Customer_id, SUM(Points) Points from (", indicating that a subquery is being used as the source of the data for the outer query. The columns selected in the outer query include Customer_id and the sum of Points.
+
+- The inner query begins with "SELECT Sales.Customer_id, Product_name, SUM(Price) Total_amount, COUNT(product_name) Total_Items, CASE When Product_name = 'Sushi' Then SUM(price) * 20 Else SUM(price) * 10 End as Points." It selects several columns, including the customer ID, product name, total amount (sum of prices), total items (count of product names), and a calculated column called "Points." The Points column is determined based on a conditional statement (CASE). If the product name is 'Sushi', the sum of the price is multiplied by 20; otherwise, it is multiplied by 10.
+
+- The inner query continues with "FROM Sales JOIN Menu ON Sales.Product_id = Menu.Product_id." It performs an inner join between the Sales and Menu tables based on the matching product IDs. This allows the query to retrieve data from these two tables.
+
+- "GROUP BY Sales.Customer_id, Product_name" groups the result set by the customer ID and product name. It means that the subsequent calculations and conditional statements will be performed for each unique combination of customer ID and product name. The closing parentheses ")" denotes the end of the subquery and the start of the outer query.
+
+- "GROUP BY Customer_id" in the outer query groups the result set by customer ID. It combines the data for each customer and prepares for the sum calculation.
+
+In summary, this query combines data from the Sales and Menu tables. It calculates the total amount spent and the total number of items purchased for each customer and product combination. Additionally, it calculates the points for each combination based on a conditional statement. The outer query then groups the result set by customer ID and calculates the sum of points for each customer. The result set includes the customer ID and the total sum of points for each customer.
 
 ---
 
+**10.** **In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
 
+__Query:__
 
+    SELECT Members.Customer_id,
+        SUM(CASE
+            WHEN Order_date >= Join_date AND Order_date < DATE_ADD(Join_date, INTERVAL 1 MONTH)
+            THEN Price * 2
+            ELSE 0
+        END) AS Points
+    FROM Sales
+    JOIN Menu ON Sales.Product_id = Menu.Product_id
+    JOIN Members ON Sales.Customer_id = Members.Customer_id
+    WHERE Members.customer_id IN ('A', 'B')
+        AND MONTH(order_date) = MONTH(join_date)
+        AND YEAR(order_date) = YEAR(join_date)
+    GROUP BY Members.customer_id
+    Order by 1;
+    
+__Output:__
 
+| Customer_id | Points |
+| ----------- | ------ |
+| A           | 102    |
+| B           | 44     |
 
+#### Steps:
 
+The query retrieves the total points earned by customers 'A' and 'B' within a specific month based on their order history. It calculates the total points earned by customers 'A' and 'B' for a specific month. It considers the order date, join date, and price information from the Sales, Menu, and Members tables. The points are calculated based on specific conditions and then summed up for each customer. The result set is ordered by the customer ID in ascending order.
 
+- The SELECT statement specifies the columns to be included in the result set. In this case, it selects the Customer_id from the Members table and calculates the sum of points using a CASE statement.
 
+- The CASE statement evaluates each row in the Sales table. If the order date falls within the same month as the join date (for the respective customer), the points are calculated as Price * 2. Otherwise, the points are set to 0. The query joins the Sales, Menu, and Members tables using the specified join conditions to retrieve the necessary data.
 
+- The WHERE clause filters the result set to include only customers 'A' and 'B' and ensures that the order date and join date are in the same month and year.
 
+- The GROUP BY clause groups the result set by the customer ID to calculate the sum of points for each customer.
 
+- The ORDER BY clause sorts the result set in ascending order based on the customer ID.
 
 ---
-
-
-
-
-
-
-
-
-
-
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
