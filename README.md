@@ -2,9 +2,9 @@
 ![](Image.png)
 
 ## Table of Contents
-- [Introduction](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#introduction)
-- [Problem Statement](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#problem-statement)
-- [Entity Relationship Diagram](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#entity-relationship-diagram)
+- [Introduction]()
+- [Problem Statement]()
+- [Entity Relationship Diagram]()
 - [Business Case Solutions]()
 
 ## Introduction
