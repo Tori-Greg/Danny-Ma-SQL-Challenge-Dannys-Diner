@@ -223,6 +223,103 @@ The query combines data from the Sales, Menu, and Members tables. It retrieves t
 
 ---
 
+**7.** **Which item was purchased just before the customer became a member?**
+
+__Query:__
+
+    Select Customer_id, Product_name, Order_date, Join_date 
+    from
+    	(
+    	Select Sales.Customer_id, Order_date, product_name, Join_date, 
+    	DENSE_RANK() Over(Partition by Sales.customer_id  order by Order_date Asc) Rnk
+    	from Sales
+    	join Menu
+    	on Sales.Product_id = Menu.Product_id 
+    	join Members
+    	on Sales.Customer_id = Members.Customer_id
+    	where Order_date < Join_date
+    	)Entire
+    Where Entire.Rnk = 1;
+    
+__Output:__
+
+| Customer_id | Product_name | Order_date | Join_date  |
+| ----------- | ------------ | ---------- | ---------- |
+| A           | sushi        | 2021-01-01 | 2021-01-07 |
+| A           | curry        | 2021-01-01 | 2021-01-07 |
+| B           | curry        | 2021-01-01 | 2021-01-09 |
+
+#### Steps:
+
+The query combines data from the Sales, Menu, and Members tables. It retrieves the customer ID, product name, order date, and join date for each record where the order date is earlier than the join date. The query assigns a dense rank to each combination of customer ID and order date, and then selects only the records with a rank of 1 (i.e., the earliest order) for each customer. The result set includes Customer_id, Product_name, Order_date, and Join_date columns from the selected records.
+
+- The outer query starts with "Select Customer_id, Product_name, Order_date, Join_date from (", indicating that a subquery is being used as the source of the data for the outer query. The columns selected in the outer query include Customer_id, Product_name, Order_date, and Join_date.
+
+- The inner query begins with "Select Sales.Customer_id, Order_date, product_name, Join_date, DENSE_RANK() Over(Partition by Sales.customer_id order by Order_date Asc) Rnk." It selects several columns, including the customer ID, order date, product name, join date, and a calculated column called "Rnk." The DENSE_RANK() function assigns a dense rank to each combination of customer ID and order date. The ranking is determined by ordering the rows within each customer ID group in ascending order of the order date. The inner query continues with "from Sales join Menu on Sales.Product_id = Menu.Product_id join Members on Sales.Customer_id = Members.Customer_id." It performs three joins: Sales and Menu based on matching product IDs, and Sales and Members based on matching customer IDs. This allows the query to retrieve data from these three tables.
+
+- "where Order_date < Join_date" is the filtering condition in the inner query. It specifies that only records where the order date is earlier than the join date should be included. The closing parentheses ")" denotes the end of the subquery and the start of the outer query.
+
+- "Where Entire.Rnk = 1" is the final filtering condition in the outer query. It selects only the records from the subquery where the rank ("Rnk") is equal to 1, meaning it retains only the earliest order for each customer.
+
+**8.** **What is the total items and amount spent for each member before they became a member?**
+
+__Query__
+
+    Select Sales.Customer_id,Sum(Price) Total_amount, count(product_name) Total_Items 
+    from Sales
+    join Menu
+    on Sales.Product_id = Menu.Product_id 
+    join Members
+    on Sales.Customer_id = Members.Customer_id
+    where Order_date < Join_date
+    Group by Sales.Customer_id
+    Order by 1;
+
+__Output:__
+
+| Customer_id | Total_amount | Total_Items |
+| ----------- | ------------ | ----------- |
+| A           | 25           | 2           |
+| B           | 40           | 3           |
+
+#### Steps:
+
+In summary, this query combines data from the Sales, Menu, and Members tables. It calculates the total amount spent by each customer ("Total_amount") based on the sum of prices in the Sales table, and it also calculates the total number of items purchased by each customer ("Total_Items") based on the count of product names. The query only considers records where the order date is earlier than the join date. The result set is grouped by customer ID and ordered by customer ID in ascending order.
+
+- SELECT Sales.Customer_id, SUM(Price) AS Total_amount, COUNT(product_name) AS Total_Items: This part of the query selects three columns. First, it selects the "Customer_id" column from the Sales table. Second, it calculates the sum of the "Price" column and aliases it as "Total_amount". Third, it calculates the count of the "product_name" column and aliases it as "Total_Items".
+
+- FROM Sales join Menu on Sales.Product_id = Menu.Product_id join Members on Sales.Customer_id = Members.Customer_id: This clause specifies the tables involved in the query and the join conditions. It joins the Sales table with the Menu table based on the matching product IDs and joins the resulting data with the Members table based on the matching customer IDs.
+
+- WHERE Order_date < Join_date: This is the filtering condition that specifies that only records where the order date is earlier than the join date should be included in the query result.
+
+- GROUP BY Sales.Customer_id: This clause groups the result set by the "Customer_id" column. It means that the subsequent calculations (sum and count) will be performed for each unique customer ID.
+
+- ORDER BY 1: This clause orders the result set by the first column, which is "Sales.Customer_id", in ascending order.
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
 
 
 
