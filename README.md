@@ -1,9 +1,9 @@
 # SQL-Challenge Week 1 Dannys-Diner
 ![](Image.png)
 
-## Table of Contents
-- [Introduction]()
-- [Problem Statement]()
+# Table of Contents
+- [Introduction](#Introduction)
+- [Problem Statement](#Problem-Statement)
 - [Entity Relationship Diagram]()
 - [Business Case Solutions]()
 
