@@ -1,6 +1,12 @@
 # SQL-Challenge Week 1 Dannys-Diner
 ![](Image.png)
 
+## Table of Contents
+- [Introduction](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#introduction)
+- [Problem Statement](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#problem-statement)
+- [Entity Relationship Diagram](https://github.com/Tori-Greg/Danny-Ma-SQL-Challenge-Dannys-Diner/edit/main/README.md#entity-relationship-diagram)
+- [Business Case Solutions]()
+
 ## Introduction
 Danny seriously loves Japanese food so in the beginning of 2021, he decides to embark upon a risky venture and opens up a cute little restaurant that sells his 3 favourite foods: sushi, curry and ramen.
 
