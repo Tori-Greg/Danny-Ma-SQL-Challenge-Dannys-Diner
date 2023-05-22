@@ -1,4 +1,4 @@
-# SQL-Challenge Week 1 Dannys-Diner
+# SQL Challenge Week 1 Dannys Diner
 ![](Image.png)
 
 # Table of Contents
